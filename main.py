@@ -21,16 +21,16 @@ def encrypt(message, key):
 # DECRYPTION
 
 
-def decrypt(cypher, key):
-    # Turn cypher into array of ascii codes
-    codeCypher = asciiArray(cypher)
+def decrypt(cipher, key):
+    # Turn cipher into array of ascii codes
+    codeCipher = asciiArray(cipher)
 #
     # Turn key into array of ascii codes
-    # Resize key to match cypher's size
-    resizedKey = np.resize(asciiArray(key), len(codeCypher))
+    # Resize key to match cipher's size
+    resizedKey = np.resize(asciiArray(key), len(codeCipher))
 #
     # Remove the key, apply mod and convert from ascii back to text
-    return codeToString(np.mod(codeCypher - resizedKey, asciiTableSize))
+    return codeToString(np.mod(codeCipher - resizedKey, asciiTableSize))
 
 # MAIN
 
