@@ -18,20 +18,6 @@ def encrypt(message, key):
     # Sum the key, apply mod and convert from ascii back to text
     return codeToString(np.mod(codeMessage + resizedKey, asciiTableSize))
 
-# DECRYPTION
-
-
-def decrypt(cipher, key):
-    # Turn cipher into array of ascii codes
-    codeCipher = asciiArray(cipher)
-#
-    # Turn key into array of ascii codes
-    # Resize key to match cipher's size
-    resizedKey = np.resize(asciiArray(key), len(codeCipher))
-#
-    # Remove the key, apply mod and convert from ascii back to text
-    return codeToString(np.mod(codeCipher - resizedKey, asciiTableSize))
-
 # MAIN
 
 
