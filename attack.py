@@ -106,7 +106,7 @@ def keepLeastDistant(characterDistances, newItem, maxValues):
 def getFrequency(letter):
     # Returns the letter frequency. If it's not in the dict, returns 0
     try:
-        return letterDistribution[letter]
+        return distributionEN[letter]
     except KeyError:
         if letter == ' ':
             return 0.08
@@ -129,6 +129,7 @@ def getKey(cipher, keySize, letterDistribution):
 
     # For each character of the key
     for keyIndex in range(keySize):
+
         # Get the stream and frequency array
         iStream = characterStreams[keyIndex]
 
@@ -136,7 +137,11 @@ def getKey(cipher, keySize, letterDistribution):
         characterDistances = []
 
         # Try every key character possibility
-        for characterCode in range(minimumKeyAsciiValue, keyAsciiTableSize):
+        for characterCode in list(range(minimumKeyAsciiValue, keyAsciiTableSize)) + [32]:
+            # Exclude non letter characters
+            if 91 <= characterCode <= 96:
+                continue
+
             # Decipher stream and normalize (lower the case and remove accents)
             decipheredStream = removeAccents(
                 decrypt(iStream, chr(characterCode)).lower())
@@ -153,13 +158,6 @@ def getKey(cipher, keySize, letterDistribution):
             # Get the sum of each character's frequency times the character's frequency in the language
             frequencySum = sum(letterDistribution[char] * streamDistribution[char]
                                for char in letterDistribution.keys() if char in streamDistribution.keys())
-
-            if keyIndex == 0:
-                print(
-                    f'Letter {chr(characterCode)}({characterCode}): {frequencySum}')
-                if chr(characterCode) == 'I':
-                    pprint(decipheredStream)
-                    pprint(streamDistribution)
 
             # See how far from the original frequency sum this is (the one we calculated earlier for comparison reasons)
             sumDistance = abs(frequencySum - lettersFrequencySum)
@@ -182,9 +180,6 @@ def getKey(cipher, keySize, letterDistribution):
                     fittest = (charResult, sum)
 
             return fittest[0][0]
-
-        if keyIndex == 0:
-            pprint(characterDistances)
 
         # Pick the character that results in more frequent characters
         bestCharacterCode = pickFittest(characterDistances)
@@ -220,20 +215,19 @@ def attack(cipher, letterDistribution):
 
 # Check that there are enough arguments
 # Check that operation type argument is correct
-if len(sys.argv) != 3 or sys.argv[1] != '-pt' and sys.argv[1] != '-en':
+if len(sys.argv) != 2:
     displayUsageAndExit(
-        "Por favor, forneca a lingua utilizada (-pt ou -en) e o nome (com extensao) do arquivo a ser atacado.")
+        "Por favor, forneca o nome (com extensao) do arquivo a ser atacado.")
 
 outputFileName = "resultado.txt"
-letterDistribution = distributionPT if sys.argv[1] == '-pt' else distributionEN
-cipherFileName = sys.argv[2]
+cipherFileName = sys.argv[1]
 
 
 try:
     with open(cipherFileName) as cipherFile:
         with open(outputFileName, "w") as outputFile:
             outputFile.write(
-                attack(content(cipherFile), letterDistribution)
+                attack(content(cipherFile), distributionEN)
             )
 
 except IOError:

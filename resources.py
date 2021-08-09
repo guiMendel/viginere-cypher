@@ -4,8 +4,8 @@ import numpy as np
 
 # Used size of the ascii table
 asciiTableSize = 256
-keyAsciiTableSize = 128
-minimumKeyAsciiValue = 32
+keyAsciiTableSize = 123
+minimumKeyAsciiValue = 65
 # When looking at the top values for each possible value for a key's character
 maxValuesToKeep = 5
 
